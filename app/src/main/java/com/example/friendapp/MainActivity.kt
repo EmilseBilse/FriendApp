@@ -29,9 +29,16 @@ class MainActivity : AppCompatActivity() {
             lvFriends.adapter = adapter
 
             lvFriends.setOnItemClickListener { _,_,pos, _ -> onListItemClick(pos) }
+            btnCreate.setOnClickListener{CreateFriend()}
         }
 
-        private fun asListMap(src: MutableList<BEFriend>): List<Map<String, String?>> {
+
+    private fun CreateFriend() {
+        val intent = Intent(this, CreateActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun asListMap(src: Array<BEFriend>): List<Map<String, String?>> {
             return src.map{ person -> hashMapOf("name" to person.name, "phone" to person.phone) }
         }
 
