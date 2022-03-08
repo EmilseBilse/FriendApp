@@ -6,14 +6,14 @@ import android.widget.SimpleAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    class ActivityFriendlist2 : AppCompatActivity() {
+
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_main)
 
             val adapter = SimpleAdapter(
                 this,
-                asListMap(Friends().getAll()),
+                asListMap(Friends().mFriends),
                 R.layout.friend_list_unit,
                 arrayOf("name", "phone"),
                 intArrayOf(R.id.name, R.id.phone)
@@ -31,5 +31,5 @@ class MainActivity : AppCompatActivity() {
         fun onListItemClick( position: Int ) {
             //todo
         }
-    }
+    
 }
