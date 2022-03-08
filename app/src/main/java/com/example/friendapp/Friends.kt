@@ -1,6 +1,8 @@
 package com.example.friendapp
 
-class Friends {
+import java.io.Serializable
+
+class Friends : Serializable{
 
     val mFriends = arrayOf<BEFriend>(
         BEFriend("Simon", "123"),
@@ -26,7 +28,18 @@ class Friends {
         BEFriend("Jan", "12121212")
     )
 
-    fun getAll(): Array<BEFriend> = mFriends
+    lateinit var friendsList: MutableList<BEFriend>
+
+    var friendsConverted: Boolean = false
+
+    fun getAll(): MutableList<BEFriend> {
+        if(!friendsConverted){
+            friendsList = mFriends.toMutableList()
+            friendsConverted = true
+        }
+
+        return friendsList
+    }
 
 
     fun getAllNames(): Array<String> = mFriends.map { p -> p.name }.toTypedArray()
