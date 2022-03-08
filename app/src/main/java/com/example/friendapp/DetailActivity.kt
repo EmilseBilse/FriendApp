@@ -1,5 +1,7 @@
 package com.example.friendapp
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +34,9 @@ class DetailActivity : AppCompatActivity() {
         friends.getAll().removeAt(friend)
 
         Log.d(TAG, friends.getAll().size.toString())
+
+        val data = Intent().apply { putExtra("friendListUpdated", friends) }
+        setResult(Activity.RESULT_OK, data)
         finish()
     }
 }
