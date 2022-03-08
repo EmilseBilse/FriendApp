@@ -1,5 +1,6 @@
 package com.example.friendapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.SimpleAdapter
@@ -29,7 +30,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         fun onListItemClick( position: Int ) {
-            //todo
+            val intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra("friend", Friends().mFriends[position])
+            startActivity(intent)
         }
-    
+
 }
