@@ -37,8 +37,10 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun CreateFriend() {
-        val intent = Intent(this, CreateActivity::class.java)
-        startActivity(intent)
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra("friends", friends)
+        intent.putExtra("isCreateMenu", true)
+        getResult.launch(intent)
     }
 
     private val getResult =

@@ -13,6 +13,7 @@ class DetailActivity : AppCompatActivity() {
 
     private var friend: Int = -1
     private lateinit var friends: Friends
+    private var isCreateMenu: Boolean = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")
@@ -20,13 +21,29 @@ class DetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
         friends = intent.getSerializableExtra("friends") as Friends
         friend = intent.getIntExtra("friendpos", -1)
+        isCreateMenu = intent.getBooleanExtra("isCreateMenu", false)
 
+        if(!isCreateMenu){
+            name.setText(friends.getAll()[friend].name)
+            phone.setText(friends.getAll()[friend].phone)
+        }
 
-        name.text = friends.getAll()[friend].name
-        phone.text = friends.getAll()[friend].phone
 
         btnDelete.setOnClickListener { onClickDelete()}
+        btnDetailsBack.setOnClickListener{ finish() }
+        btnSave.setOnClickListener { onClickSave() }
+    }
 
+    private fun onClickSave() {
+        if(isCreateMenu) {
+            friends.addFriend(BEFriend(name.text.toString(), phone.text.toString()))
+        }else{
+            friends.updateFriend(friend,BEFriend(name.text.toString(), phone.text.toString()))
+        }
+
+        val data = Intent().apply { putExtra("friendListUpdated", friends) }
+        setResult(Activity.RESULT_OK, data)
+        finish()
     }
 
     private fun onClickDelete() {

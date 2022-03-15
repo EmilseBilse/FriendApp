@@ -41,6 +41,19 @@ class Friends : Serializable{
         return friendsList
     }
 
+    fun addFriend(friend: BEFriend) {
+        if(!friendsConverted){
+            friendsList = mFriends.toMutableList()
+            friendsConverted = true
+        }else
+        friendsList.add(friend)
+    }
+
+    fun updateFriend(oldFriendIndex: Int, newFriend: BEFriend){
+        friendsList[oldFriendIndex].name = newFriend.name
+        friendsList[oldFriendIndex].phone = newFriend.phone
+    }
+
 
     fun getAllNames(): Array<String> = mFriends.map { p -> p.name }.toTypedArray()
 }
