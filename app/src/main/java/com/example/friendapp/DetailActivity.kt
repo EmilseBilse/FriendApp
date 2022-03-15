@@ -60,6 +60,13 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun onClickDelete() {
+        if(isCreateMenu) {
+            name.setText("")
+            phone.setText("")
+            email.setText("")
+            url.setText("")
+            return
+        }
         Log.d(TAG, friends.getAll().size.toString())
         friends.getAll().removeAt(friend)
 
