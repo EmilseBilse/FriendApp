@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.SimpleAdapter
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -21,18 +22,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val adapter = SimpleAdapter(
-            this,
-            asListMap(friends.getAll()),
-            R.layout.friend_list_unit,
-            arrayOf("name", "phone"),
-            intArrayOf(R.id.name, R.id.phone)
-        )
+        setupFriendList()
 
-        lvFriends.adapter = adapter
-
-        lvFriends.setOnItemClickListener { _,_,pos, _ -> onListItemClick(pos) }
         btnCreate.setOnClickListener{CreateFriend()}
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupFriendList()
     }
 
 
@@ -62,20 +59,19 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("friendpos", position)
             intent.putExtra("friends", friends)
             getResult.launch(intent)
-
-            
-            val adapter = SimpleAdapter(
-                this,
-                asListMap(friends.getAll()),
-                R.layout.friend_list_unit,
-                arrayOf("name", "phone"),
-                intArrayOf(R.id.name, R.id.phone)
-            )
-
-            lvFriends.adapter = adapter
-
-            lvFriends.setOnItemClickListener { _,_,pos, _ -> onListItemClick(pos) }
-
         }
+
+    private fun setupFriendList() {
+        val adapter = SimpleAdapter(
+            this,
+            asListMap(friends.getAll()),
+            R.layout.friend_list_unit,
+            arrayOf("name", "phone"),
+            intArrayOf(R.id.name, R.id.phone)
+        )
+
+        lvFriends.adapter = adapter
+        lvFriends.setOnItemClickListener { _, _, pos, _ -> onListItemClick(pos) }
+    }
 
 }

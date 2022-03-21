@@ -47,6 +47,8 @@ class DetailActivity : AppCompatActivity() {
         btnSMSFriend.setOnClickListener { onClickSms() }
     }
 
+
+
     private fun onClickSave() {
         if(isCreateMenu) {
             friends.addFriend(BEFriend(name.text.toString(), phone.text.toString(), "", ""))
@@ -139,6 +141,7 @@ class DetailActivity : AppCompatActivity() {
         } else Log.d(TAG, "Runtime permission not needed")
         sendMessage()
     }
+
 
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>,
