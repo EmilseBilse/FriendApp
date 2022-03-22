@@ -69,10 +69,7 @@ class DetailActivity : AppCompatActivity() {
             url.setText("")
             return
         }
-        Log.d(TAG, friends.getAll().size.toString())
         friends.getAll().removeAt(friend)
-
-        Log.d(TAG, friends.getAll().size.toString())
 
         val data = Intent().apply { putExtra("friendListUpdated", friends) }
         setResult(Activity.RESULT_OK, data)
