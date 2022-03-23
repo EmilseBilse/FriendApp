@@ -45,15 +45,16 @@ class DetailActivity : AppCompatActivity() {
         btnGoToFriendUrl.setOnClickListener { onClickBrowser() }
         btnEmailFriend.setOnClickListener { onClickEmail() }
         btnSMSFriend.setOnClickListener { onClickSms() }
+        btnTakeNewPhoto.setOnClickListener { onClickNewPhoto() }
     }
 
 
 
     private fun onClickSave() {
         if(isCreateMenu) {
-            friends.addFriend(BEFriend(name.text.toString(), phone.text.toString(), "", ""))
+            friends.addFriend(BEFriend(name.text.toString(), phone.text.toString(), email.text.toString(), url.text.toString(),""))
         }else{
-            friends.updateFriend(friend,BEFriend(name.text.toString(), phone.text.toString(), "", ""))
+            friends.updateFriend(friend,BEFriend(name.text.toString(), phone.text.toString(), email.text.toString(), url.text.toString(),""))
         }
 
         val data = Intent().apply { putExtra("friendListUpdated", friends) }
@@ -94,7 +95,7 @@ class DetailActivity : AppCompatActivity() {
         Log.d(TAG, "onClickEMAIL started")
         val emailIntent = Intent(Intent.ACTION_SEND)
         emailIntent.type = "plain/text"
-        val receivers = friends.getAll()[friend].email
+        val receivers = arrayOf(friends.getAll()[friend].email)
         emailIntent.putExtra(Intent.EXTRA_EMAIL, receivers)
         Log.d(TAG, "onClickEMAIL: intent preprared")
 
@@ -153,6 +154,14 @@ class DetailActivity : AppCompatActivity() {
         val m = SmsManager.getDefault()
         var number = friends.getAll()[friend].phone
         m.sendTextMessage(number, null, null, null, null)
+    }
+
+    private fun onClickNewPhoto() {
+        val intent = Intent(this, TakePhotoActivity::class.java)
+        if(!isCreateMenu){
+            intent.putExtra("friend", friend)
+        }
+        startActivity(intent)
     }
 
 }

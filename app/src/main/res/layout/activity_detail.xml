@@ -30,7 +30,31 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation = "vertical">
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/imgPhoto"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/defaultprofile"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"/>
+
+            <Button
+                android:id="@+id/btnTakeNewPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/take_photo"
+                />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,63 +82,67 @@
 
         </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PHONE: "
-            android:textStyle="bold"
-            android:layout_marginLeft="10dp"/>
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
 
-        <EditText
-            android:id="@+id/phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="Insert phone number"
-            android:inputType="number"
-            android:text="" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="PHONE: "
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Insert phone number"
+                android:inputType="number"
+                android:text="" />
 
 
-        <ImageButton
-            android:id="@+id/btnCallFriend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:adjustViewBounds="true"
-            android:maxWidth="70dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/phonebrbr" />
+            <ImageButton
+                android:id="@+id/btnCallFriend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:adjustViewBounds="true"
+                android:maxWidth="70dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/phonebrbr"
+                android:background="@android:color/transparent"/>
 
-        <ImageButton
-            android:id="@+id/btnSMSFriend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:adjustViewBounds="true"
-            android:maxWidth="70dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/sms" />
+            <ImageButton
+                android:id="@+id/btnSMSFriend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:adjustViewBounds="true"
+                android:maxWidth="70dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/sms"
+                android:background="@android:color/transparent"/>
 
-    </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="10dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="EMAIL: "
-                android:textStyle="bold"
-                android:layout_marginLeft="10dp"/>
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/email"
@@ -136,7 +164,8 @@
                 android:adjustViewBounds="true"
                 android:maxWidth="70dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/emailwithatsign" />
+                android:src="@drawable/emailwithatsign"
+                android:background="@android:color/transparent"/>
 
         </LinearLayout>
 
@@ -145,12 +174,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="10dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="URL: "
-                android:textStyle="bold"
-                android:layout_marginLeft="10dp"/>
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/url"
@@ -170,47 +200,42 @@
                 android:adjustViewBounds="true"
                 android:maxWidth="70dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/urliconyes" />
+                android:src="@drawable/urliconyes"
+                android:background="@android:color/transparent"/>
 
         </LinearLayout>
-
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
+            android:layout_margin="5dp"
             android:gravity="bottom"
-            android:layout_margin="5dp">
-
+            android:orientation="horizontal">
 
 
             <ImageButton
                 android:id="@+id/btnDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_delete"
-                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
-                />
+                android:scaleType="fitCenter"
+                android:src="@android:drawable/ic_menu_delete" />
 
             <Space
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_weight="1" >
-            </Space>
+                android:layout_weight="1"></Space>
 
             <Button
                 android:id="@+id/btnSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Save"/>
+                android:text="Save" />
 
             <Space
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_weight="1" >
-            </Space>
+                android:layout_weight="1"></Space>
 
             <Button
                 android:id="@+id/btnDetailsBack"
