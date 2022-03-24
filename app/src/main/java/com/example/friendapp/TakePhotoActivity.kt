@@ -1,7 +1,9 @@
 package com.example.friendapp
 
 import android.Manifest
+import android.app.Activity
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -65,6 +67,8 @@ class TakePhotoActivity : AppCompatActivity() {
     }
 
     private fun OnClickSave() {
+        val data = Intent().apply { putExtra("friendPicture", picturePath) }
+        setResult(Activity.RESULT_OK, data)
         finish()
     }
 
@@ -213,6 +217,7 @@ class TakePhotoActivity : AppCompatActivity() {
             picturePath = ""
             takenPicture.visibility = View.INVISIBLE
             viewFinder.visibility = View.VISIBLE
+            btnSavePhoto.visibility = View.INVISIBLE
         }else{
             finish()
         }

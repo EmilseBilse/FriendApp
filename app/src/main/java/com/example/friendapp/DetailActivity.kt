@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_detail.*
 import android.Manifest
+import androidx.activity.result.contract.ActivityResultContracts
 
 private const val TAG = "detailActivity"
 
@@ -21,6 +22,7 @@ class DetailActivity : AppCompatActivity() {
     private var friend: Int = -1
     private lateinit var friends: Friends
     private var isCreateMenu: Boolean = false;
+    private lateinit var pictureUri: String 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")
@@ -35,8 +37,13 @@ class DetailActivity : AppCompatActivity() {
             phone.setText(friends.getAll()[friend].phone)
             email.setText(friends.getAll()[friend].email)
             url.setText(friends.getAll()[friend].url)
-        }
 
+            pictureUri = friends.getAll()[friend].picture.toString()
+            if (!pictureUri.isNullOrBlank()){
+                val uri: Uri = Uri.parse(pictureUri)
+                imgPhoto.setImageURI(uri)
+            }
+        }
 
         btnDelete.setOnClickListener { onClickDelete()}
         btnDetailsBack.setOnClickListener{ finish() }
@@ -52,9 +59,9 @@ class DetailActivity : AppCompatActivity() {
 
     private fun onClickSave() {
         if(isCreateMenu) {
-            friends.addFriend(BEFriend(name.text.toString(), phone.text.toString(), email.text.toString(), url.text.toString(),""))
+            friends.addFriend(BEFriend(name.text.toString(), phone.text.toString(), email.text.toString(), url.text.toString(),pictureUri))
         }else{
-            friends.updateFriend(friend,BEFriend(name.text.toString(), phone.text.toString(), email.text.toString(), url.text.toString(),""))
+            friends.updateFriend(friend,BEFriend(name.text.toString(), phone.text.toString(), email.text.toString(), url.text.toString(),pictureUri))
         }
 
         val data = Intent().apply { putExtra("friendListUpdated", friends) }
@@ -161,7 +168,18 @@ class DetailActivity : AppCompatActivity() {
         if(!isCreateMenu){
             intent.putExtra("friend", friend)
         }
-        startActivity(intent)
+        getResult.launch(intent)
     }
+
+    private val getResult =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                pictureUri = (it.data?.getSerializableExtra("friendPicture") as String?).toString()
+                val uri: Uri = Uri.parse(pictureUri)
+                imgPhoto.setImageURI(uri)
+            }
+        }
 
 }
