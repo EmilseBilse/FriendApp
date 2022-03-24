@@ -1,33 +1,31 @@
 package com.example.friendapp
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.Manifest
+import android.content.ContentValues
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import java.util.concurrent.Executors
-import androidx.camera.core.*
-import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.video.*
-import androidx.camera.video.VideoCapture
-import androidx.core.content.PermissionChecker
 import com.example.friendapp.databinding.ActivityMainBinding
-import java.nio.ByteBuffer
+import kotlinx.android.synthetic.main.activity_take_photo.*
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
-import android.provider.MediaStore
-
-import android.content.ContentValues
-import android.os.Build
-import android.view.View
-import kotlinx.android.synthetic.main.activity_take_photo.*
-
-typealias LumaListener = (luma: Double) -> Unit
-
+import java.util.concurrent.Executors
 
 class TakePhotoActivity : AppCompatActivity() {
 
@@ -35,10 +33,10 @@ class TakePhotoActivity : AppCompatActivity() {
 
     private var imageCapture: ImageCapture? = null
 
-    private var videoCapture: VideoCapture<Recorder>? = null
-    private var recording: Recording? = null
-
     private lateinit var cameraExecutor: ExecutorService
+
+    private var isFrontCamera: Boolean = false
+    private var picturePath: String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,9 +53,13 @@ class TakePhotoActivity : AppCompatActivity() {
         }
 
 
-        btnExitPhoto.setOnClickListener { finish() }
+        btnExitPhoto.setOnClickListener { OnCLickBack() }
         btnTakePhoto.setOnClickListener { OnCLickTakePhoto() }
         btnSavePhoto.setOnClickListener { OnClickSave() }
+        switchFlip.setOnCheckedChangeListener { compoundButton, b ->
+            isFrontCamera = b
+            startCamera()
+        }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
@@ -103,12 +105,24 @@ class TakePhotoActivity : AppCompatActivity() {
                 override fun
                         onImageSaved(output: ImageCapture.OutputFileResults){
                     val msg = "Photo capture succeeded: ${output.savedUri}"
+                    picturePath = "${output.savedUri}"
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                     Log.d(TAG, msg)
+                    setPicture()
                 }
             }
         )
+    }
 
+    private fun setPicture() {
+        if(!picturePath.contentEquals("")){
+            viewFinder.visibility = View.INVISIBLE
+            Log.d(TAG, "$picturePath: ER PATH22222!!")
+            val uri: Uri = Uri.parse(picturePath)
+            takenPicture.setImageURI(uri)
+            takenPicture.visibility = View.VISIBLE
+            Log.d(TAG, "$picturePath: ER PATH11111!!")
+        }
     }
 
     private fun startCamera() {
@@ -125,23 +139,34 @@ class TakePhotoActivity : AppCompatActivity() {
                     it.setSurfaceProvider(viewFinder.surfaceProvider)
                 }
 
-            // Select back camera as a default
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+            imageCapture = ImageCapture.Builder()
+                .build()
 
-            try {
-                // Unbind use cases before rebinding
-                cameraProvider.unbindAll()
+            if(isFrontCamera){
+                useFrontOrBackCamera(CameraSelector.DEFAULT_FRONT_CAMERA, cameraProvider, preview)
 
-                // Bind use cases to camera
-                cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview)
-
-            } catch(exc: Exception) {
-                Log.e(TAG, "Use case binding failed", exc)
+            }else{
+                useFrontOrBackCamera(CameraSelector.DEFAULT_BACK_CAMERA, cameraProvider, preview)
             }
 
         }, ContextCompat.getMainExecutor(this))
+    }
 
+    private fun useFrontOrBackCamera(defaultBackCamera: CameraSelector, cameraProvider: ProcessCameraProvider, preview: Preview) {
+        // Select back camera as a default
+        val cameraSelector = defaultBackCamera
+
+        try {
+            // Unbind use cases before rebinding
+            cameraProvider.unbindAll()
+
+            // Bind use cases to camera
+            cameraProvider.bindToLifecycle(
+                this, cameraSelector, preview, imageCapture)
+
+        } catch(exc: Exception) {
+            Log.e(TAG, "Use case binding failed", exc)
+        }
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
@@ -183,5 +208,13 @@ class TakePhotoActivity : AppCompatActivity() {
         }
     }
 
-
+    private fun OnCLickBack() {
+        if (!picturePath.contentEquals("")){
+            picturePath = ""
+            takenPicture.visibility = View.INVISIBLE
+            viewFinder.visibility = View.VISIBLE
+        }else{
+            finish()
+        }
+    }
 }
