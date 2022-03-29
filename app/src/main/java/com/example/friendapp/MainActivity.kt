@@ -9,12 +9,14 @@ import android.widget.SimpleAdapter
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 
 private const val TAG = "MainActivity"
 private const val Request_Friends_Updated  = "friendListUpdated"
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var friendsData: List<BEFriend>
     var friends = Friends()
 
 
@@ -24,14 +26,22 @@ class MainActivity : AppCompatActivity() {
 
         BEFriendRepository.initialize(this)
 
-        setupFriendList()
+
 
         btnCreate.setOnClickListener{CreateFriend()}
     }
 
+
     override fun onResume() {
         super.onResume()
-        setupFriendList()
+        BEFriendRepository.get().getFriends().observe(
+            this
+        ) { friends ->
+            friends?.let {
+                friendsData = friends
+                setupFriendList()
+            }
+        }
     }
 
 
@@ -52,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    private fun asListMap(src: MutableList<BEFriend>): List<Map<String, String?>> {
+    private fun asListMap(src: List<BEFriend>): List<Map<String, String?>> {
             return src.map{ person -> hashMapOf("name" to person.name, "phone" to person.phone) }
         }
 
@@ -66,7 +76,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupFriendList() {
         val adapter = SimpleAdapter(
             this,
-            asListMap(friends.getAll()),
+                    asListMap(friendsData),
             R.layout.friend_list_unit,
             arrayOf("name", "phone"),
             intArrayOf(R.id.name, R.id.phone)

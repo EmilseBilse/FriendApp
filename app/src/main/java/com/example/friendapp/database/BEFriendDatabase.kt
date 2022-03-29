@@ -9,7 +9,7 @@ import com.example.friendapp.BEFriend
     entities = [BEFriend::class],
     version = 5,
 )
-@TypeConverters( BEFriendConverters::class)
+
 abstract class BEFriendDatabase: RoomDatabase () {
     abstract fun beFriendDao(): BEFriendDao
 }

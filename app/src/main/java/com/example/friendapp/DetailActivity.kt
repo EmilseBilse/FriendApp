@@ -22,7 +22,7 @@ class DetailActivity : AppCompatActivity() {
     private var friend: Int = -1
     private lateinit var friends: Friends
     private var isCreateMenu: Boolean = false;
-    private lateinit var pictureUri: String 
+    private var pictureUri: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")

@@ -1,12 +1,10 @@
 package com.example.friendapp.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.example.friendapp.BEFriend
 
+@Dao
 interface BEFriendDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
