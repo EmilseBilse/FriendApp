@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        BEFriendRepository.initialize(this)
+
         setupFriendList()
 
         btnCreate.setOnClickListener{CreateFriend()}

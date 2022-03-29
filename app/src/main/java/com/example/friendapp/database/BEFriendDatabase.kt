@@ -1,6 +1,7 @@
 package com.example.friendapp.database
 
 import androidx.room.Database
+import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.friendapp.BEFriend
 
@@ -9,6 +10,6 @@ import com.example.friendapp.BEFriend
     version = 5,
 )
 @TypeConverters( BEFriendConverters::class)
-abstract class BEFriendDatabase () {
+abstract class BEFriendDatabase: RoomDatabase () {
     abstract fun beFriendDao(): BEFriendDao
 }

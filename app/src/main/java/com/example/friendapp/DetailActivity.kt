@@ -59,7 +59,10 @@ class DetailActivity : AppCompatActivity() {
 
     private fun onClickSave() {
         if(isCreateMenu) {
-            friends.addFriend(BEFriend(name.text.toString(), phone.text.toString(), email.text.toString(), url.text.toString(),pictureUri))
+
+            val friend =BEFriend(name.text.toString(), phone.text.toString(), email.text.toString(), url.text.toString(),pictureUri)
+            BEFriendRepository.get().addFriend(friend)
+            friends.addFriend(friend)
         }else{
             friends.updateFriend(friend,BEFriend(name.text.toString(), phone.text.toString(), email.text.toString(), url.text.toString(),pictureUri))
         }
