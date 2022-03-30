@@ -21,4 +21,8 @@ interface BEFriendDao {
 
     @Update
     fun updateFriend(friend: BEFriend)
+
+    @Query("DELETE FROM friend WHERE id = (:id)")
+    fun deleteFriend(id:Long)
+
 }

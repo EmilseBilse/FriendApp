@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     var friends = Friends()
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -47,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun CreateFriend() {
         val intent = Intent(this, DetailActivity::class.java)
+
         intent.putExtra("friends", friends)
         intent.putExtra("isCreateMenu", true)
         getResult.launch(intent)
@@ -70,6 +72,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, DetailActivity::class.java)
             intent.putExtra("friendpos", position)
             intent.putExtra("friends", friends)
+            intent.putExtra("friendID", friendsData[position].id )
             getResult.launch(intent)
         }
 

@@ -14,15 +14,28 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_detail.*
 import android.Manifest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
 
 private const val TAG = "detailActivity"
 
 class DetailActivity : AppCompatActivity() {
 
+    private val beFriendRepository = BEFriendRepository.get()
     private var friend: Int = -1
+    private var friendId: Long = -1
     private lateinit var friends: Friends
     private var isCreateMenu: Boolean = false;
     private var pictureUri: String = ""
+    private val friendIdLiveData = MutableLiveData<Long>()
+    private lateinit var selectFriend: BEFriend
+
+    var friendLiveData: LiveData<BEFriend?> =
+        Transformations.switchMap(friendIdLiveData) {fID ->
+           beFriendRepository.getFriend(fID)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")
@@ -30,20 +43,8 @@ class DetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
         friends = intent.getSerializableExtra("friends") as Friends
         friend = intent.getIntExtra("friendpos", -1)
+        friendId = intent.getLongExtra("friendID", -1)
         isCreateMenu = intent.getBooleanExtra("isCreateMenu", false)
-
-        if(!isCreateMenu){
-            name.setText(friends.getAll()[friend].name)
-            phone.setText(friends.getAll()[friend].phone)
-            email.setText(friends.getAll()[friend].email)
-            url.setText(friends.getAll()[friend].url)
-
-            pictureUri = friends.getAll()[friend].picture.toString()
-            if (!pictureUri.isNullOrBlank()){
-                val uri: Uri = Uri.parse(pictureUri)
-                imgPhoto.setImageURI(uri)
-            }
-        }
 
         btnDelete.setOnClickListener { onClickDelete()}
         btnDetailsBack.setOnClickListener{ finish() }
@@ -55,15 +56,53 @@ class DetailActivity : AppCompatActivity() {
         btnTakeNewPhoto.setOnClickListener { onClickNewPhoto() }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if(!isCreateMenu) {
+            loadFriend(friendId)
+            friendLiveData.observe(
+                this,
+                Observer { f ->
+                    f?.let {
+                        this.selectFriend = f
+                        updateFriendDetail()
+                    }
+                }
+            )
+        }
+    }
+
+    private fun updateFriendDetail() {
+        if(!isCreateMenu){
+            name.setText(selectFriend.name)
+            phone.setText(selectFriend.phone)
+            email.setText(selectFriend.email)
+            url.setText(selectFriend.url)
+
+            pictureUri = selectFriend.picture.toString()
+            if (!pictureUri.isNullOrBlank()){
+                val uri: Uri = Uri.parse(pictureUri)
+                imgPhoto.setImageURI(uri)
+            }
+        }
+    }
+
+
+    private fun loadFriend(fId : Long) {
+        friendIdLiveData.value = fId
+    }
 
 
     private fun onClickSave() {
         if(isCreateMenu) {
 
             val friend =BEFriend(name.text.toString(), phone.text.toString(), email.text.toString(), url.text.toString(),pictureUri)
-            BEFriendRepository.get().addFriend(friend)
+            beFriendRepository.addFriend(friend)
             friends.addFriend(friend)
         }else{
+            val updateFriend =BEFriend(name.text.toString(), phone.text.toString(), email.text.toString(), url.text.toString(),pictureUri)
+            updateFriend.id = selectFriend.id
+            beFriendRepository.updateFriend(updateFriend)
             friends.updateFriend(friend,BEFriend(name.text.toString(), phone.text.toString(), email.text.toString(), url.text.toString(),pictureUri))
         }
 
@@ -80,6 +119,8 @@ class DetailActivity : AppCompatActivity() {
             url.setText("")
             return
         }
+
+        beFriendRepository.deleteFriend(friends.getAll()[friend].id)
         friends.getAll().removeAt(friend)
 
         val data = Intent().apply { putExtra("friendListUpdated", friends) }

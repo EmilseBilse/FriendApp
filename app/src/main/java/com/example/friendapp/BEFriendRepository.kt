@@ -39,6 +39,16 @@ class BEFriendRepository private constructor(context: Context){
         return l
     }
 
+    fun deleteFriend(friendID: Long){
+        executor.execute {
+            beFriendDao.deleteFriend(friendID)
+        }
+    }
+
+    fun getFriend(friendID: Long) : LiveData<BEFriend?> = beFriendDao.getFriend(friendID)
+
+
+
     companion object {
         private var INSTANCE: BEFriendRepository? = null
 
