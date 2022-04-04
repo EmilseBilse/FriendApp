@@ -120,7 +120,7 @@ class DetailActivity : AppCompatActivity() {
             return
         }
 
-        beFriendRepository.deleteFriend(friends.getAll()[friend].id)
+        beFriendRepository.deleteFriend(selectFriend.id)
         friends.getAll().removeAt(friend)
 
         val data = Intent().apply { putExtra("friendListUpdated", friends) }
