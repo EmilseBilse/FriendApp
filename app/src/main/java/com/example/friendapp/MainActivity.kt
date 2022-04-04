@@ -17,7 +17,6 @@ private const val Request_Friends_Updated  = "friendListUpdated"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var friendsData: List<BEFriend>
-    var friends = Friends()
 
 
 
@@ -49,20 +48,9 @@ class MainActivity : AppCompatActivity() {
     private fun CreateFriend() {
         val intent = Intent(this, DetailActivity::class.java)
 
-        intent.putExtra("friends", friends)
         intent.putExtra("isCreateMenu", true)
-        getResult.launch(intent)
+        startActivity(intent)
     }
-
-    private val getResult =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                friends = it.data?.getSerializableExtra(Request_Friends_Updated) as Friends
-
-            }
-        }
 
     private fun asListMap(src: List<BEFriend>): List<Map<String, String?>> {
             return src.map{ person -> hashMapOf("name" to person.name, "phone" to person.phone) }
@@ -71,9 +59,8 @@ class MainActivity : AppCompatActivity() {
         fun onListItemClick( position: Int ) {
             val intent = Intent(this, DetailActivity::class.java)
             intent.putExtra("friendpos", position)
-            intent.putExtra("friends", friends)
             intent.putExtra("friendID", friendsData[position].id )
-            getResult.launch(intent)
+            startActivity(intent)
         }
 
     private fun setupFriendList() {

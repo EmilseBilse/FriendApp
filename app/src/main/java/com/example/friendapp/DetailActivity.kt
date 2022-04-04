@@ -26,7 +26,6 @@ class DetailActivity : AppCompatActivity() {
     private val beFriendRepository = BEFriendRepository.get()
     private var friend: Int = -1
     private var friendId: Long = -1
-    private lateinit var friends: Friends
     private var isCreateMenu: Boolean = false;
     private var pictureUri: String = ""
     private val friendIdLiveData = MutableLiveData<Long>()
@@ -41,7 +40,6 @@ class DetailActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate()")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
-        friends = intent.getSerializableExtra("friends") as Friends
         friend = intent.getIntExtra("friendpos", -1)
         friendId = intent.getLongExtra("friendID", -1)
         isCreateMenu = intent.getBooleanExtra("isCreateMenu", false)
@@ -98,16 +96,12 @@ class DetailActivity : AppCompatActivity() {
 
             val friend =BEFriend(name.text.toString(), phone.text.toString(), email.text.toString(), url.text.toString(),pictureUri)
             beFriendRepository.addFriend(friend)
-            friends.addFriend(friend)
         }else{
             val updateFriend =BEFriend(name.text.toString(), phone.text.toString(), email.text.toString(), url.text.toString(),pictureUri)
             updateFriend.id = selectFriend.id
             beFriendRepository.updateFriend(updateFriend)
-            friends.updateFriend(friend,BEFriend(name.text.toString(), phone.text.toString(), email.text.toString(), url.text.toString(),pictureUri))
         }
 
-        val data = Intent().apply { putExtra("friendListUpdated", friends) }
-        setResult(Activity.RESULT_OK, data)
         finish()
     }
 
@@ -121,22 +115,19 @@ class DetailActivity : AppCompatActivity() {
         }
 
         beFriendRepository.deleteFriend(selectFriend.id)
-        friends.getAll().removeAt(friend)
 
-        val data = Intent().apply { putExtra("friendListUpdated", friends) }
-        setResult(Activity.RESULT_OK, data)
         finish()
     }
 
     private fun onClickCall() {
-        var number = friends.getAll()[friend].phone
+        var number = selectFriend.phone
         val intent = Intent(Intent.ACTION_DIAL)
         intent.data = Uri.parse("tel:$number")
         startActivity(intent)
     }
 
     private fun onClickBrowser() {
-        val url = friends.getAll()[friend].url
+        val url = selectFriend.url
         val i = Intent(Intent.ACTION_VIEW)
         i.data = Uri.parse(url)
         startActivity(i)
@@ -146,7 +137,7 @@ class DetailActivity : AppCompatActivity() {
         Log.d(TAG, "onClickEMAIL started")
         val emailIntent = Intent(Intent.ACTION_SEND)
         emailIntent.type = "plain/text"
-        val receivers = arrayOf(friends.getAll()[friend].email)
+        val receivers = arrayOf(selectFriend.email)
         emailIntent.putExtra(Intent.EXTRA_EMAIL, receivers)
         Log.d(TAG, "onClickEMAIL: intent preprared")
 
@@ -168,7 +159,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun startSMSActivity() {
         val sendIntent = Intent(Intent.ACTION_VIEW)
-        var number = friends.getAll()[friend].phone
+        var number = selectFriend.phone
         sendIntent.data = Uri.parse("sms:$number")
         startActivity(sendIntent)
     }
@@ -203,7 +194,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun sendMessage() {
         val m = SmsManager.getDefault()
-        var number = friends.getAll()[friend].phone
+        var number = selectFriend.phone
         m.sendTextMessage(number, null, null, null, null)
     }
 
